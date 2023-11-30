@@ -89,11 +89,11 @@ matrix = game.uti_matrix()
 
 # matrix = np.array([[(3,3), (5,1)], [(1,5), (1,1)]])
 
-testMatrix = testPareto(matrix)
+# testMatrix = testPareto(matrix)
 
-print(matrix)
+# print(matrix)
 
-print(testMatrix)
+# print(testMatrix)
 
 
 
@@ -112,7 +112,7 @@ def FindPareto(x):
 
     step = 0.1
 
-    test = np.arange(-0.9,1, step)
+    test = np.arange(-1,1, step)
 
     xList = []
     yList = []
@@ -120,8 +120,6 @@ def FindPareto(x):
 
     for i in range(len(test)):
         j = test[i]
-
-        
 
         y = x + j
 
@@ -134,23 +132,35 @@ def FindPareto(x):
 
         xTemp = x[indices]
 
+        print('len indices: ', (indices))
+        
+        print('len a: ', len(a))
+
         # plt.plot(xTemp, a)
         
-        xArray = xTemp/(1+(xTemp+j+xTemp)**2)
+        xArray = xTemp/(1+(a+xTemp)**2)
         xTest = x/(1+(x+j+x)**2)
+
+        # plt.plot(xTemp, xArray)
+
+        print('len xArray', len(xArray))
 
         tempMax = np.max(xArray)
 
-        tempMaxIndex = np.where(xArray == tempMax)
+        tempMaxIndex = np.argmax(xArray)
 
-        tempMaxIndexOld = np.where(xTest == tempMax)
+        originalIndex = indices[0][tempMaxIndex]
 
-        xList.append(x[tempMaxIndexOld])
-        yList.append(y[tempMaxIndexOld])
+        # tempMaxIndex = np.where(xArray == tempMax)
+
+        # tempMaxIndexOld = np.where(xTest == tempMax)
+
+        xList.append(x[originalIndex])
+        yList.append(y[originalIndex])
 
         # show funny pattern
         # plt.plot(xTemp, xArray)
-        # plt.scatter(xTemp[tempMaxIndex], xArray[tempMaxIndex])
+        # plt.scatter(x[originalIndex], xTest[originalIndex])
 
     xList2 = []
     yList2 = []
@@ -170,17 +180,19 @@ def FindPareto(x):
 
         yTemp = y[indices]
 
-        xArray = a/(1+(xTemp+j+xTemp)**2)
+        xArray = a/(1+(a+xTemp)**2)
         xTest = y/(1+(y+x)**2)
 
         tempMax = np.max(xArray)
 
-        tempMaxIndex = np.where(xArray == tempMax)
+        tempMaxIndex = np.argmax(xArray)
+
+        originalIndex = indices[0][tempMaxIndex]
 
         tempMaxIndexOld = np.where(xTest == tempMax)
 
-        xList2.append(x[tempMaxIndexOld])
-        yList2.append(y[tempMaxIndexOld])
+        xList2.append(x[originalIndex])
+        yList2.append(y[originalIndex])
 
         # plt.plot(x, arrayOfInterest[i])
         # plt.plot(x[tempMaxIndex], y[tempMaxIndex])
