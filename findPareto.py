@@ -112,18 +112,11 @@ def FindPareto(x):
 
     step = 0.1
 
-    arrayOfInterest = np.zeros((int(2/(step)), len(x)))
-
-
     test = np.arange(-0.9,1, step)
 
-    maxList = []
-
-    xMaxList = []
     xList = []
     yList = []
 
-    # y = x/(1+((x)+x)**2)
 
     for i in range(len(test)):
         j = test[i]
@@ -133,35 +126,27 @@ def FindPareto(x):
         y = x + j
 
         a = np.clip(y, 0, 1)
+        
 
         indices = np.where(y == a)
 
+        a = a[indices]
+
         xTemp = x[indices]
 
-        print(np.shape(a))
-
-        # tempArray = x/(1+(a+x)**2)
+        # plt.plot(xTemp, a)
+        
         xArray = xTemp/(1+(xTemp+j+xTemp)**2)
         xTest = x/(1+(x+j+x)**2)
 
-        # arrayOfInterest[i, :] = x/(1+(x+j+x)**2)
-
-        # tempMaxIndex = np.argmax(arrayOfInterest[i])
-
         tempMax = np.max(xArray)
 
-        # tempMaxIndex = np.where(xTest == tempMax)
         tempMaxIndex = np.where(xArray == tempMax)
-        # xMaxList.append(tempMax)
 
         tempMaxIndexOld = np.where(xTest == tempMax)
 
         xList.append(x[tempMaxIndexOld])
         yList.append(y[tempMaxIndexOld])
-
-        # plt.plot(x, arrayOfInterest[i])
-        # plt.plot(x[tempMaxIndex], y[tempMaxIndex])
-        # plt.plot(x, xTest)
 
         # show funny pattern
         # plt.plot(xTemp, xArray)
@@ -173,33 +158,24 @@ def FindPareto(x):
     for i in range(len(test)):
         j = test[i]
 
-        
-
         y = x + j
 
         a = np.clip(y, 0, 1)
 
         indices = np.where(y == a)
 
+        a = a[indices]
+
         xTemp = x[indices]
 
         yTemp = y[indices]
 
-        print(np.shape(a))
-
-        # tempArray = x/(1+(a+x)**2)
-        xArray = yTemp/(1+(xTemp+j+xTemp)**2)
+        xArray = a/(1+(xTemp+j+xTemp)**2)
         xTest = y/(1+(y+x)**2)
-
-        # arrayOfInterest[i, :] = x/(1+(x+j+x)**2)
-
-        # tempMaxIndex = np.argmax(arrayOfInterest[i])
 
         tempMax = np.max(xArray)
 
-        # tempMaxIndex = np.where(xTest == tempMax)
         tempMaxIndex = np.where(xArray == tempMax)
-        # xMaxList.append(tempMax)
 
         tempMaxIndexOld = np.where(xTest == tempMax)
 
@@ -231,8 +207,8 @@ X, Y, X2, Y2 = FindPareto(x)
 
 plt.plot(X, Y, label ='Pareto optima developement')
 plt.plot(X2, Y2)
-plt.xlim(0,1)
-plt.ylim(0,1)
+# plt.xlim(0,1)
+# plt.ylim(0,1)
 plt.title('Pareto Optima for fishermen')
 plt.legend()
 plt.show()
