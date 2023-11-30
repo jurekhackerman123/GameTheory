@@ -59,3 +59,6 @@ plt.plot(x,x/(1+((0.1+x)+x)**2))
 plt.plot(x,x/(1+((0.2+x)+x)**2))
 plt.plot(x,x/(1+((0.3+x)+x)**2))
 #plt.show()
+
+
+
