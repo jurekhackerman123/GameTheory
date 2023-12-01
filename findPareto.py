@@ -71,7 +71,7 @@ matrix = game.uti_matrix()
 result = testPareto(matrix)
 # print(result)
 
-result = np.flip(result, axis=1)
+# result = np.flip(result, axis=1)
 
 # testMatrix = testPareto(matrix)
 
@@ -110,8 +110,8 @@ cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
 x = np.linspace(0, 1, 20)
 y = x
 
-ax2.pcolor(x, y, result, alpha = 0.2)
-ax1.pcolor(x, y, result, alpha = 0.2)
+# ax2.pcolor(x, y, result, alpha = 0.2)
+# ax1.pcolor(x, y, result, alpha = 0.2)
 
 plt.show()
 
