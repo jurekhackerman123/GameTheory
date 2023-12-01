@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from TwoPlayerClass import * 
-
+import copy
 # Generate data for the plots
 x = np.linspace(0, 1, 100)
 y = x
@@ -12,74 +12,53 @@ Z1 = X/(np.ones_like(X)+(X+Y)**2)  # Quadratic colormap 1
 
 Z2 = Y/(1+(X+Y)**2)  # Quadratic colormap 1
 
-# Create a figure and subplots
-# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))#, sharey = True)
-
-# # Plot the first quadratic colormap
-# quad1 = ax1.pcolormesh(X, Y, Z1, cmap='plasma')
-# ax1.set_title('Utility Player 1')
-
-# # Plot the second quadratic colormap
-# quad2 = ax2.pcolormesh(X, Y, Z2, cmap='plasma')
-# ax2.set_title('Utility Player 2')
 
 
-# vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
-# vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
-
-# # Normalize the colormaps based on the common color limits
-# quad1.set_clim(vmin_common, vmax_common)
-# quad2.set_clim(vmin_common, vmax_common)
-
-
-# cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
-# #cbar.set_label('Utility')
-
-# #plt.subplots_adjust(wspace=0.5)
-
-# #plt.tight_layout()
-
-# plt.show()
-# #for i in range(10)
-# plt.plot(x,x/(1+(x+x)**2))
-# plt.plot(x,x/(1+((0.1+x)+x)**2))
-# plt.plot(x,x/(1+((0.2+x)+x)**2))
-# plt.plot(x,x/(1+((0.3+x)+x)**2))
-#plt.show()
 
 
 def test(a,b,c): 
     return 0
 
 
-def testPareto(matrix): 
 
 
+import numpy as np
+
+def testPareto(matrix):
     paretoMatrix = np.ones((len(matrix), len(matrix)))
 
-    for i in range(len(matrix)): 
-        for j in range(len(matrix)): 
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
 
-            if i == 0 and j == 1: 
+            if i == 0 and j == 3: 
                 print('test')
 
             payOffOne, payOffTwo = matrix[i, j]
 
-            for k in range(len(matrix)):
-                for l in range(len(matrix)): 
-                    if k == i or l == j: 
-                        continue
+            tempMatrix = copy.deepcopy(matrix)
+            tempMatrix[i, j] = 0, 0
 
-                    otherPayOffOne, otherPayOffTwo = matrix[k, l]
 
-                    if otherPayOffOne >= payOffOne and otherPayOffTwo >= payOffTwo: 
+            indices = np.where(tempMatrix[:,:,0] >= payOffOne)
+
+
+            # if we do not find a value that is higher than the current value, it automatically is a PO
+            if np.shape(tempMatrix[indices])[0] == 0:
+                paretoMatrix[i, j] = True
+                continue
+
+            # if any value is bigger or eq to payoff one *and* at the same time, bigger or eq to payoff two, 
+            # it cannot be a pareto optimum 
+
+            for k in range(len(tempMatrix[indices][:])):
+                if np.any(tempMatrix[indices][k][1] >= payOffTwo):
+                    if np.any(tempMatrix[indices][k][1] > payOffTwo) or np.any(tempMatrix[indices][k][0] > payOffOne):
                         paretoMatrix[i, j] = False
-                        # print(otherPayOffOne , 'bigger',  payOffOne, 'and',  otherPayOffTwo, 'beq' , otherPayOffOne)
+                    else: 
+                        paretoMatrix[i, j] = True
 
-                        continue
-            
 
-    
+
     return paretoMatrix
 
 
@@ -87,7 +66,12 @@ game = tp_game([1,1], [1,1], 20, test)
 
 matrix = game.uti_matrix()
 
-# matrix = np.array([[(3,3), (5,1)], [(1,5), (1,1)]])
+# matrix = np.array([[(3,3), (5,1), (2,2), (8,8)], [(2,1), (5,5), (7,3), (8,8)], [(1,5), (1,1), (2,3), (8,8)], [(4,5), (2,2), (2,5), (6,8)]])
+
+result = testPareto(matrix)
+# print(result)
+
+result = np.flip(result, axis=1)
 
 # testMatrix = testPareto(matrix)
 
@@ -96,16 +80,45 @@ matrix = game.uti_matrix()
 # print(testMatrix)
 
 
+# plt.pcolor(result)
+# # plt.
+# plt.show()
+
+
+# Create a figure and subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))#, sharey = True)
+
+# # Plot the first quadratic colormap
+quad1 = ax1.pcolormesh(X, Y, Z1, cmap='plasma')
+ax1.set_title('Utility Player 1')
+
+# # Plot the second quadratic colormap
+quad2 = ax2.pcolormesh(X, Y, Z2, cmap='plasma')
+ax2.set_title('Utility Player 2')
+
+
+vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
+vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
+
+# # Normalize the colormaps based on the common color limits
+quad1.set_clim(vmin_common, vmax_common)
+quad2.set_clim(vmin_common, vmax_common)
+
+
+cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
+
+x = np.linspace(0, 1, 20)
+y = x
+
+ax2.pcolor(x, y, result, alpha = 0.2)
+ax1.pcolor(x, y, result, alpha = 0.2)
+
+plt.show()
 
 
 
 
-
-
-
-
-
-
+exit()
 # OTHER APPROACHs
 
 def FindPareto(x): 
@@ -123,7 +136,7 @@ def FindPareto(x):
 
         y = x + j
 
-        a = np.clip(y, 0, 1)
+        a = y#np.clip(y, 0, 1)
         
 
         indices = np.where(y == a)
@@ -159,40 +172,40 @@ def FindPareto(x):
         yList.append(y[originalIndex])
 
         # show funny pattern
-        # plt.plot(xTemp, xArray)
-        # plt.scatter(x[originalIndex], xTest[originalIndex])
+        plt.plot(xTemp, xArray)
+        plt.scatter(x[originalIndex], xTest[originalIndex])
 
     xList2 = []
     yList2 = []
 
-    for i in range(len(test)):
-        j = test[i]
+    # for i in range(len(test)):
+    #     j = test[i]
 
-        y = x + j
+    #     y = x + j
 
-        a = np.clip(y, 0, 1)
+    #     a = y#np.clip(y, 0, 1)
 
-        indices = np.where(y == a)
+    #     indices = np.where(y == a)
 
-        a = a[indices]
+    #     a = a[indices]
 
-        xTemp = x[indices]
+    #     xTemp = x[indices]
 
-        yTemp = y[indices]
+    #     yTemp = y[indices]
 
-        xArray = a/(1+(a+xTemp)**2)
-        xTest = y/(1+(y+x)**2)
+    #     xArray = a/(1+(a+xTemp)**2)
+    #     xTest = y/(1+(y+x)**2)
 
-        tempMax = np.max(xArray)
+    #     tempMax = np.max(xArray)
 
-        tempMaxIndex = np.argmax(xArray)
+    #     tempMaxIndex = np.argmax(xArray)
 
-        originalIndex = indices[0][tempMaxIndex]
+    #     originalIndex = indices[0][tempMaxIndex]
 
-        tempMaxIndexOld = np.where(xTest == tempMax)
+    #     tempMaxIndexOld = np.where(xTest == tempMax)
 
-        xList2.append(x[originalIndex])
-        yList2.append(y[originalIndex])
+    #     xList2.append(x[originalIndex])
+    #     yList2.append(y[originalIndex])
 
         # plt.plot(x, arrayOfInterest[i])
         # plt.plot(x[tempMaxIndex], y[tempMaxIndex])
