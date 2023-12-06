@@ -44,7 +44,7 @@ def testPareto(matrix):
 
 
 def FindNash(matrix): 
-    print(np.shape(matrix))
+    print((matrix))
     dim = np.shape(matrix)[0]
     # iterate over columns 
     maxListCols = []
@@ -56,7 +56,7 @@ def FindNash(matrix):
         # for columns, player two maximises his payoff
         print(matrix[i])
         print(np.argmax(matOne[i]))
-        maxListCols.append([i, np.argmax(matOne[i])])
+        maxListCols.append([i, np.argmax(matTwo[i])])
     
     maxListRows = []
     for j in range(dim):
@@ -64,8 +64,9 @@ def FindNash(matrix):
     
     for k in range(dim):
         if maxListCols[k] == maxListRows[k]: 
+            
             indexOfInterest = maxListCols[k]
-            return matrix[indexOfInterest,:]
+            return indexOfInterest 
 
     return None
 
@@ -73,8 +74,8 @@ def FindNash(matrix):
 def no_tax(action,eff,imps):
     return 0
 
-testMat = [[[1,1],[1,2],[3,3]], [[4,3],[5,5],[9,9]], [[7,7],[7,3],[1,1]]]
+# game2 = tp_game([1,1],[1,1],5,no_tax)
+# # print(game2.uti_matrix)
+# test = FindNash(game2.uti_matrix())
 
-game2 = tp_game([1,1],[1,1],3,no_tax)
-# print(game2.uti_matrix)
-test = FindNash(game2.uti_matrix())
+# print('test',test)

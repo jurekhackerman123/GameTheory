@@ -1,9 +1,10 @@
 from TwoPlayerClass import * 
-from FindParetoAndNash import *
 
 import numpy as np
 import matplotlib.pyplot as plt 
 import nashpy as nash 
+from matplotlib.colors import ListedColormap
+import copy
 
 class tp_game: #two player game
     
@@ -48,7 +49,7 @@ class tp_game: #two player game
         um = self.uti_matrix()
         return nash.Game(um[:,:,0],um[:,:,1])
 
-    def GetNashEquilibrium(self): 
+    def GetNashEquilibriumStupid(self): 
         tempGame = self.create_Nash_game()
         nashEquilibrium = tempGame.support_enumeration()
         nashEqList = list(nashEquilibrium)
@@ -56,6 +57,76 @@ class tp_game: #two player game
         x = nashEqList[0][0][np.where(nashEqList[0][0] == True)[0][0]]
         y = nashEqList[0][1][np.where(nashEqList[0][1] == True)[0][0]]
         return x, y
+
+
+        
+
+    def FindNash(self): 
+        matrix = self.uti_matrix()
+        dim = np.shape(matrix)[0]
+
+        # iterate over columns 
+        maxListCols = []
+
+        matOne = matrix[:,:,0]
+        matTwo = matrix[:,:,1]
+
+        for i in range(dim):
+            # for columns, player two maximises his payoff
+            maxListCols.append([i, np.argmax(matTwo[i])])
+        
+        maxListRows = []
+        for j in range(dim):
+            # for rows, player one maximises her payoff
+            maxListRows.append([np.argmax(matOne[:,j]), j])
+        
+        for k in range(dim):
+            if maxListCols[k] == maxListRows[k]: 
+                
+                indexOfInterest = maxListCols[k]
+                
+                return self.action_space[indexOfInterest]
+
+        print('No Nash Equilibrium found!')
+        return None
+
+
+
+
+    def FindPareto(self):
+        # paretoMatrix = np.ones((len(matrix), len(matrix)))
+        matrix = self.uti_matrix()
+        paretoMatrix = np.ones((len(matrix), len(matrix)))
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+
+                payOffOne, payOffTwo = matrix[i, j]
+
+                tempMatrix = copy.deepcopy(matrix)
+                tempMatrix[i, j] = 0, 0
+
+
+                indices = np.where(tempMatrix[:,:,0] >= payOffOne)
+
+
+                # if we do not find a value that is higher than the current value, it automatically is a PO
+                if np.shape(tempMatrix[indices])[0] == 0:
+                    paretoMatrix[i, j] = True
+                    continue
+
+                # if any value is bigger or eq to payoff one *and* at the same time, bigger or eq to payoff two, 
+                # it cannot be a pareto optimum 
+                for k in range(len(tempMatrix[indices][:])):
+                    if np.any(tempMatrix[indices][k][1] >= payOffTwo):
+                        if np.any(tempMatrix[indices][k][1] > payOffTwo) or np.any(tempMatrix[indices][k][0] > payOffOne):
+                            paretoMatrix[i, j] = False
+                        else: 
+                            paretoMatrix[i, j] = True
+
+
+
+        return paretoMatrix
 
     def ShowHeatMap(self): 
         utiMatrixCombined = self.uti_matrix()
@@ -72,11 +143,11 @@ class tp_game: #two player game
         # Create a figure and subplots
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4))#, sharey = True)
 
-        # # Plot the first quadratic colormap
+        # Plot the first quadratic colormap
         quad1 = ax1.pcolormesh(x, y, utiMatrixOne, cmap='plasma')
         ax1.set_title('Utility Player 1')
 
-        # # Plot the second quadratic colormap
+        # Plot the second quadratic colormap
         quad2 = ax2.pcolormesh(x, y, utiMatrixTwo, cmap='plasma')
         ax2.set_title('Utility Player 2')
 
@@ -84,7 +155,7 @@ class tp_game: #two player game
         vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
         vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
 
-        # # Normalize the colormaps based on the common color limits
+        # Normalize the colormaps based on the common color limits
         quad1.set_clim(vmin_common, vmax_common)
         quad2.set_clim(vmin_common, vmax_common)
 
@@ -94,40 +165,18 @@ class tp_game: #two player game
         x = np.linspace(0, 1, grating)
         y = x
 
-        result = testPareto(utiMatrixCombined)
+        result = self.FindPareto()
 
-        ax3.pcolor(x, y, result, alpha = 1)
-        # ax1.pcolor(x, y, result, alpha = 0.2)
+        ax3.pcolor(x, y, result, alpha = 1, cmap='binary')
 
         # Plot Nash eq
-        # nashEqX, nashEqY = self.GetNashEquilibrium()
-        # ax3.scatter(nashEqX, nashEqY, s = 100, color = 'red')
+        [nashEqX, nashEqY] = self.FindNash()
+        ax3.scatter(nashEqX, nashEqY, s = 150, color = 'red', marker='s')
+
+        ax3.text(nashEqX, nashEqY, 'NE', fontsize=8, ha='center', va='center')
 
         plt.show()
 
 
-def no_tax(action,eff,imps):
-    return 0
-
-def cutoff(action,eff,imps):
-    return -10*np.heaviside(action - 0.7,1)
-
-
-def simpleTry(action, eff, imp): 
-    return -(eff/imp) * action
-
-
-game1 = tp_game([1,1],[1,1],20,no_tax)
-game2 = tp_game([1,1],[1,1],5,cutoff)
-game3 = tp_game([1,1],[1,1],5,simpleTry)
-
-game1.ShowHeatMap()
-# x, y = game1.GetNashEquilibrium()
-# print(x,y)
-
-
-# ng1 = game1.create_Nash_game()
-# ng2 = game2.create_Nash_game()
-# ng3 = game3.create_Nash_game()
 
 
