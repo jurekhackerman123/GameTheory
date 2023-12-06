@@ -30,9 +30,6 @@ def testPareto(matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix)):
 
-            if i == 0 and j == 3: 
-                print('test')
-
             payOffOne, payOffTwo = matrix[i, j]
 
             tempMatrix = copy.deepcopy(matrix)
@@ -62,13 +59,13 @@ def testPareto(matrix):
     return paretoMatrix
 
 
-game = tp_game([1,1], [1,1], 20, test)
+# game = tp_game([1,1], [1,1], 20, test)
 
-matrix = game.uti_matrix()
+# matrix = game.uti_matrix()
 
-# matrix = np.array([[(3,3), (5,1), (2,2), (8,8)], [(2,1), (5,5), (7,3), (8,8)], [(1,5), (1,1), (2,3), (8,8)], [(4,5), (2,2), (2,5), (6,8)]])
+# # matrix = np.array([[(3,3), (5,1), (2,2), (8,8)], [(2,1), (5,5), (7,3), (8,8)], [(1,5), (1,1), (2,3), (8,8)], [(4,5), (2,2), (2,5), (6,8)]])
 
-result = testPareto(matrix)
+# result = testPareto(matrix)
 # print(result)
 
 # result = np.flip(result, axis=1)
@@ -85,157 +82,157 @@ result = testPareto(matrix)
 # plt.show()
 
 
-# Create a figure and subplots
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))#, sharey = True)
+# # Create a figure and subplots
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))#, sharey = True)
 
-# # Plot the first quadratic colormap
-quad1 = ax1.pcolormesh(X, Y, Z1, cmap='plasma')
-ax1.set_title('Utility Player 1')
+# # # Plot the first quadratic colormap
+# quad1 = ax1.pcolormesh(X, Y, Z1, cmap='plasma')
+# ax1.set_title('Utility Player 1')
 
-# # Plot the second quadratic colormap
-quad2 = ax2.pcolormesh(X, Y, Z2, cmap='plasma')
-ax2.set_title('Utility Player 2')
-
-
-vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
-vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
-
-# # Normalize the colormaps based on the common color limits
-quad1.set_clim(vmin_common, vmax_common)
-quad2.set_clim(vmin_common, vmax_common)
+# # # Plot the second quadratic colormap
+# quad2 = ax2.pcolormesh(X, Y, Z2, cmap='plasma')
+# ax2.set_title('Utility Player 2')
 
 
-cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
+# vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
+# vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
 
-x = np.linspace(0, 1, 20)
-y = x
-
-# ax2.pcolor(x, y, result, alpha = 0.2)
-# ax1.pcolor(x, y, result, alpha = 0.2)
-
-plt.show()
+# # # Normalize the colormaps based on the common color limits
+# quad1.set_clim(vmin_common, vmax_common)
+# quad2.set_clim(vmin_common, vmax_common)
 
 
+# cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
+
+# x = np.linspace(0, 1, 20)
+# y = x
+
+# # ax2.pcolor(x, y, result, alpha = 0.2)
+# # ax1.pcolor(x, y, result, alpha = 0.2)
+
+# plt.show()
 
 
-exit()
+
+
+# exit()
 # OTHER APPROACHs
 
-def FindPareto(x): 
+# def FindPareto(x): 
 
-    step = 0.1
+#     step = 0.1
 
-    test = np.arange(-1,1, step)
+#     test = np.arange(-1,1, step)
 
-    xList = []
-    yList = []
+#     xList = []
+#     yList = []
 
 
-    for i in range(len(test)):
-        j = test[i]
+#     for i in range(len(test)):
+#         j = test[i]
 
-        y = x + j
+#         y = x + j
 
-        a = y#np.clip(y, 0, 1)
+#         a = y#np.clip(y, 0, 1)
         
 
-        indices = np.where(y == a)
+#         indices = np.where(y == a)
 
-        a = a[indices]
+#         a = a[indices]
 
-        xTemp = x[indices]
+#         xTemp = x[indices]
 
-        print('len indices: ', (indices))
+#         print('len indices: ', (indices))
         
-        print('len a: ', len(a))
+#         print('len a: ', len(a))
 
-        # plt.plot(xTemp, a)
+#         # plt.plot(xTemp, a)
         
-        xArray = xTemp/(1+(a+xTemp)**2)
-        xTest = x/(1+(x+j+x)**2)
+#         xArray = xTemp/(1+(a+xTemp)**2)
+#         xTest = x/(1+(x+j+x)**2)
 
-        # plt.plot(xTemp, xArray)
+#         # plt.plot(xTemp, xArray)
 
-        print('len xArray', len(xArray))
+#         print('len xArray', len(xArray))
 
-        tempMax = np.max(xArray)
+#         tempMax = np.max(xArray)
 
-        tempMaxIndex = np.argmax(xArray)
+#         tempMaxIndex = np.argmax(xArray)
 
-        originalIndex = indices[0][tempMaxIndex]
+#         originalIndex = indices[0][tempMaxIndex]
 
-        # tempMaxIndex = np.where(xArray == tempMax)
+#         # tempMaxIndex = np.where(xArray == tempMax)
 
-        # tempMaxIndexOld = np.where(xTest == tempMax)
+#         # tempMaxIndexOld = np.where(xTest == tempMax)
 
-        xList.append(x[originalIndex])
-        yList.append(y[originalIndex])
+#         xList.append(x[originalIndex])
+#         yList.append(y[originalIndex])
 
-        # show funny pattern
-        plt.plot(xTemp, xArray)
-        plt.scatter(x[originalIndex], xTest[originalIndex])
+#         # show funny pattern
+#         plt.plot(xTemp, xArray)
+#         plt.scatter(x[originalIndex], xTest[originalIndex])
 
-    xList2 = []
-    yList2 = []
+#     xList2 = []
+#     yList2 = []
 
-    # for i in range(len(test)):
-    #     j = test[i]
+#     # for i in range(len(test)):
+#     #     j = test[i]
 
-    #     y = x + j
+#     #     y = x + j
 
-    #     a = y#np.clip(y, 0, 1)
+#     #     a = y#np.clip(y, 0, 1)
 
-    #     indices = np.where(y == a)
+#     #     indices = np.where(y == a)
 
-    #     a = a[indices]
+#     #     a = a[indices]
 
-    #     xTemp = x[indices]
+#     #     xTemp = x[indices]
 
-    #     yTemp = y[indices]
+#     #     yTemp = y[indices]
 
-    #     xArray = a/(1+(a+xTemp)**2)
-    #     xTest = y/(1+(y+x)**2)
+#     #     xArray = a/(1+(a+xTemp)**2)
+#     #     xTest = y/(1+(y+x)**2)
 
-    #     tempMax = np.max(xArray)
+#     #     tempMax = np.max(xArray)
 
-    #     tempMaxIndex = np.argmax(xArray)
+#     #     tempMaxIndex = np.argmax(xArray)
 
-    #     originalIndex = indices[0][tempMaxIndex]
+#     #     originalIndex = indices[0][tempMaxIndex]
 
-    #     tempMaxIndexOld = np.where(xTest == tempMax)
+#     #     tempMaxIndexOld = np.where(xTest == tempMax)
 
-    #     xList2.append(x[originalIndex])
-    #     yList2.append(y[originalIndex])
+#     #     xList2.append(x[originalIndex])
+#     #     yList2.append(y[originalIndex])
 
-        # plt.plot(x, arrayOfInterest[i])
-        # plt.plot(x[tempMaxIndex], y[tempMaxIndex])
-        # plt.plot(x, xTest)
+#         # plt.plot(x, arrayOfInterest[i])
+#         # plt.plot(x[tempMaxIndex], y[tempMaxIndex])
+#         # plt.plot(x, xTest)
 
-        # show funny pattern
-        # plt.plot(xTemp, xArray)
-        # plt.scatter(xTemp[tempMaxIndex], xArray[tempMaxIndex])
-
-
+#         # show funny pattern
+#         # plt.plot(xTemp, xArray)
+#         # plt.scatter(xTemp[tempMaxIndex], xArray[tempMaxIndex])
 
 
 
 
-    return xList, yList, xList2, yList2
+
+
+#     return xList, yList, xList2, yList2
 
 
 
         
 
-X, Y, X2, Y2 = FindPareto(x)
+# X, Y, X2, Y2 = FindPareto(x)
 
-# print(X, Y)
+# # print(X, Y)
 
-plt.plot(X, Y, label ='Pareto optima developement')
-plt.plot(X2, Y2)
-# plt.xlim(0,1)
-# plt.ylim(0,1)
-plt.title('Pareto Optima for fishermen')
-plt.legend()
-plt.show()
+# plt.plot(X, Y, label ='Pareto optima developement')
+# plt.plot(X2, Y2)
+# # plt.xlim(0,1)
+# # plt.ylim(0,1)
+# plt.title('Pareto Optima for fishermen')
+# plt.legend()
+# plt.show()
 
 
