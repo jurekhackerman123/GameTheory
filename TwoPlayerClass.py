@@ -137,8 +137,8 @@ class tp_game: #two player game
         ax2.set_title('Utility Player 2')
 
 
-        vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
-        vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
+        vmin_common = 0 # min(quad1.get_clim()[0], quad2.get_clim()[0])
+        vmax_common = 0.6 # max(quad1.get_clim()[1], quad2.get_clim()[1])
 
         # Normalize the colormaps based on the common color limits
         quad1.set_clim(vmin_common, vmax_common)
@@ -154,6 +154,7 @@ class tp_game: #two player game
         print('Pareto Optimum found!!')
 
         ax3.pcolor(x, y, result, alpha = 1, cmap='binary')
+        ax3.set_title('Nash Equilibria')
 
         # Plot Nash eq
         [nashEqX, nashEqY] = self.FindNash()
