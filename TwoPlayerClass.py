@@ -66,14 +66,16 @@ class tp_game: #two player game
             maxListRows.append([np.argmax(matOne[:,j]), j])
         
         for k in range(dim):
-            if maxListCols[k] == maxListRows[k]: 
+            print(maxListCols[k], maxListRows[k])
+            # if maxListCols[k] == maxListRows[k]: 
+            if maxListCols[k] in maxListRows:
                 
                 indexOfInterest = maxListCols[k]
                 
                 return self.action_space[indexOfInterest]
 
         print('No Nash Equilibrium found!')
-        return None
+        return [0,0]
 
 
 
@@ -140,10 +142,16 @@ class tp_game: #two player game
         ax1.set_title('Utility Player 1')
         ax1.set_aspect('equal', adjustable='box')
 
+        ax1.set_xlabel('Player Two')
+        ax1.set_ylabel('Player One')
+
         # Plot the second quadratic colormap
         quad2 = ax2.pcolormesh(X_centers, Y_centers, utiMatrixTwo, cmap='plasma')
         ax2.set_title('Utility Player 2')
         ax2.set_aspect('equal', adjustable='box')
+
+        ax2.set_xlabel('Player Two')
+        ax2.set_ylabel('Player One')
 
         vmin_common = 0 # min(quad1.get_clim()[0], quad2.get_clim()[0])
         vmax_common = 0.6 # max(quad1.get_clim()[1], quad2.get_clim()[1])
@@ -164,16 +172,20 @@ class tp_game: #two player game
         ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap='binary', label = 'Pareto Optima')
         ax3.set_title('Pareto Optima')
         ax3.set_aspect('equal', adjustable='box')
+
+        ax3.set_xlabel('Player Two')
+        ax3.set_ylabel('Player One')
         
 
+
         # Plot Nash eq
-        [nashEqX, nashEqY] = self.FindNash()
-        print('Nash Equilibrium found!!')
+        [nashEqY, nashEqX] = self.FindNash()
+        print('Nash Equilibrium found!! at ', nashEqX, nashEqY)
         ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
 
 
 
-        ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
+        # ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
 
         # ax3.legend()
 
