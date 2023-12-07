@@ -46,6 +46,7 @@ def no_tax(action,eff,imps):
 def cutoff(action,eff,imps):
     return -10*np.heaviside(action - 0.5,1)
 
-game1 = tp_game([1,1],[1,0.5],18,cutOff)
+
+game1 = tp_game([1,1],[1,1],20,cutoff)
 game1.ShowHeatMap()
 

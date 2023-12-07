@@ -139,7 +139,9 @@ class tp_game: #two player game
         # X, Y = np.meshgrid(x, y)
 
         # Create a figure and subplots
-        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 3.5))#, sharey = True)
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4))#, sharey = True)
+
+        plt.subplots_adjust(wspace=0.5, hspace=0.1)  # Adjust the values as needed
 
         # Plot the first quadratic colormap
         quad1 = ax1.pcolormesh(X_centers, Y_centers, utiMatrixOne, cmap='plasma')
@@ -191,14 +193,15 @@ class tp_game: #two player game
 
         for i in range(len(indicesList)): 
             [nashEqY, nashEqX] = indicesList[i]
-            ax3.scatter(X_centers[nashEqX], Y_centers[nashEqY], s = 3*grating, color = 'darkorange', marker='D', label = 'Nash Equilibrium', alpha = 1)
+            ax3.scatter(X_centers[nashEqX], Y_centers[nashEqY], s = 400/grating, color = 'darkorange', marker='D', label = 'Nash Equilibrium', alpha = 1)
         print('Nash Equilibrium found!! at ', nashEqX, nashEqY)
         # ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
 
 
 
+
         
-        ax3.legend()
+        ax3.legend(loc = 'lower left')
 
         # ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
 
