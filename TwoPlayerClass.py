@@ -120,6 +120,13 @@ class tp_game: #two player game
 
         # cols correspond to dim, because nxn matrix 
         grating = np.shape(utiMatrixOne)[0]
+        
+        X = np.array([j/grating for j in range(0,grating+1)])  
+        Y = X  # Define your own bin edges
+
+        # Compute bin centers for ticks
+        X_centers = (X[1:] + X[:-1]) / 2
+        Y_centers = (Y[1:] + Y[:-1]) / 2
 
         x = np.linspace(0, 1, grating)
         y = x
@@ -129,12 +136,12 @@ class tp_game: #two player game
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 3.5))#, sharey = True)
 
         # Plot the first quadratic colormap
-        quad1 = ax1.pcolormesh(x, y, utiMatrixOne, cmap='plasma')
+        quad1 = ax1.pcolormesh(X_centers, Y_centers, utiMatrixOne, cmap='plasma')
         ax1.set_title('Utility Player 1')
         ax1.set_aspect('equal', adjustable='box')
 
         # Plot the second quadratic colormap
-        quad2 = ax2.pcolormesh(x, y, utiMatrixTwo, cmap='plasma')
+        quad2 = ax2.pcolormesh(X_centers, Y_centers, utiMatrixTwo, cmap='plasma')
         ax2.set_title('Utility Player 2')
         ax2.set_aspect('equal', adjustable='box')
 
@@ -154,8 +161,8 @@ class tp_game: #two player game
         result = self.FindPareto()
         print('Pareto Optimum found!!')
 
-        ax3.pcolor(x, y, result, alpha = 1, cmap='binary', label = 'Pareto optima')
-        ax3.set_title('Pareto optima')
+        ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap='binary', label = 'Pareto Optima')
+        ax3.set_title('Pareto Optima')
         ax3.set_aspect('equal', adjustable='box')
         
 
