@@ -1,5 +1,7 @@
 import numpy as np
 import nashpy as nash 
+import matplotlib.pyplot as plt
+import copy
 
 class tp_game: #two player game
     
@@ -43,3 +45,121 @@ class tp_game: #two player game
     def create_Nash_game(self):
         um = self.uti_matrix()
         return nash.Game(um[:,:,0],um[:,:,1])
+
+    def FindNash(self): 
+        matrix = self.uti_matrix()
+        dim = np.shape(matrix)[0]
+
+        # iterate over columns 
+        maxListCols = []
+
+        matOne = matrix[:,:,0]
+        matTwo = matrix[:,:,1]
+
+        for i in range(dim):
+            # for columns, player two maximises his payoff
+            maxListCols.append([i, np.argmax(matTwo[i])])
+        
+        maxListRows = []
+        for j in range(dim):
+            # for rows, player one maximises her payoff
+            maxListRows.append([np.argmax(matOne[:,j]), j])
+        
+        for k in range(dim):
+            if maxListCols[k] == maxListRows[k]: 
+                
+                indexOfInterest = maxListCols[k]
+                
+                return self.action_space[indexOfInterest]
+
+        print('No Nash Equilibrium found!')
+        return None
+
+
+
+
+    def FindPareto(self):
+        # paretoMatrix = np.ones((len(matrix), len(matrix)))
+        matrix = self.uti_matrix()
+        paretoMatrix = np.ones((len(matrix), len(matrix)))
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+
+                payOffOne, payOffTwo = matrix[i, j]
+
+                tempMatrix = copy.deepcopy(matrix)
+                tempMatrix[i, j] = 0, 0
+
+
+                indices = np.where(tempMatrix[:,:,0] >= payOffOne)
+
+
+                # if we do not find a value that is higher than the current value, it automatically is a PO
+                if np.shape(tempMatrix[indices])[0] == 0:
+                    paretoMatrix[i, j] = True
+                    continue
+
+                # if any value is bigger or eq to payoff one *and* at the same time, bigger or eq to payoff two, 
+                # it cannot be a pareto optimum 
+                for k in range(len(tempMatrix[indices][:])):
+                    if np.any(tempMatrix[indices][k][1] >= payOffTwo):
+                        if np.any(tempMatrix[indices][k][1] > payOffTwo) or np.any(tempMatrix[indices][k][0] > payOffOne):
+                            paretoMatrix[i, j] = False
+                        else: 
+                            paretoMatrix[i, j] = True
+
+
+
+        return paretoMatrix
+
+    def ShowHeatMap(self): 
+        utiMatrixCombined = self.uti_matrix()
+        utiMatrixOne = utiMatrixCombined[:,:,0]
+        utiMatrixTwo = utiMatrixCombined[:,:,1]
+
+        # cols correspond to dim, because nxn matrix 
+        grating = np.shape(utiMatrixOne)[0]
+
+        x = np.linspace(0, 1, grating)
+        y = x
+        # X, Y = np.meshgrid(x, y)
+
+        # Create a figure and subplots
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4))#, sharey = True)
+
+        # Plot the first quadratic colormap
+        quad1 = ax1.pcolormesh(x, y, utiMatrixOne, cmap='plasma')
+        ax1.set_title('Utility Player 1')
+
+        # Plot the second quadratic colormap
+        quad2 = ax2.pcolormesh(x, y, utiMatrixTwo, cmap='plasma')
+        ax2.set_title('Utility Player 2')
+
+
+        vmin_common = min(quad1.get_clim()[0], quad2.get_clim()[0])
+        vmax_common = max(quad1.get_clim()[1], quad2.get_clim()[1])
+
+        # Normalize the colormaps based on the common color limits
+        quad1.set_clim(vmin_common, vmax_common)
+        quad2.set_clim(vmin_common, vmax_common)
+
+
+        cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
+
+        x = np.linspace(0, 1, grating)
+        y = x
+
+        result = self.FindPareto()
+        print('Pareto Optimum found!!')
+
+        ax3.pcolor(x, y, result, alpha = 1, cmap='binary')
+
+        # Plot Nash eq
+        [nashEqX, nashEqY] = self.FindNash()
+        print('Nash Equilibrium found!!')
+        ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s')
+
+        ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
+
+        plt.show()
