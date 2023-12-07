@@ -9,25 +9,22 @@ def ShowHeatMap(taxFunction, impactList, efficiencyList):
     game.ShowHeatMap()
 
 
-def sinusImp(eff, imp):
 
-    return np.sin(imp)
+def sinus(action, eff, imp): 
 
-def sinusEff(eff, imp): 
+    return np.sin(action * eff / imp)
 
-    return np.sin(eff)
+def simple(action, eff, imp): 
 
-def simple(eff, imp): 
+    return action * eff / imp
 
-    return eff / imp
+def cutOff(action, eff, imp):
 
-def cutOff(eff, imp):
+    return -10*np.heaviside(action - eff, 1)
 
-    return -10*np.heaviside(0.5 - eff, 1)
+def cutOffImp(action, eff, imp): 
 
-def cutOffImp(eff, imp): 
-
-    return -10*np.heaviside(imp - 0.5, 1)
+    return -10*np.heaviside(action - imp, 1)
 
 
 
@@ -43,6 +40,6 @@ def no_tax(action,eff,imps):
 def cutoff(action,eff,imps):
     return -10*np.heaviside(action - 0.7,1)
 
-game1 = tp_game([1,1],[1,1],5,no_tax)
+game1 = tp_game(impactList,efficiencyList,5,cutOff)
 game1.ShowHeatMap()
 
