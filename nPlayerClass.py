@@ -19,7 +19,7 @@ class n_player_steps(): #n player game with heaviside as tax
         return np.array([self.best_response(i) for i in range(self.n)])
     
     def total_usage(self):
-        return np.sum(self.imp_list * self.nash_eqs())
+        return np.sum(self.imp_list * self.nash_eqs())/np.sum(self.imp_list)
     
     def total_outcome(self):
         return np.sum(self.nash_utis())
