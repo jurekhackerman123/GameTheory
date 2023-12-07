@@ -59,7 +59,7 @@ class tp_game: #two player game
         return x, y
 
 
-        
+
 
     def FindNash(self): 
         matrix = self.uti_matrix()
@@ -166,17 +166,29 @@ class tp_game: #two player game
         y = x
 
         result = self.FindPareto()
+        print('Pareto Optimum found!!')
 
         ax3.pcolor(x, y, result, alpha = 1, cmap='binary')
 
         # Plot Nash eq
         [nashEqX, nashEqY] = self.FindNash()
-        ax3.scatter(nashEqX, nashEqY, s = 150, color = 'red', marker='s')
+        print('Nash Equilibrium found!!')
+        ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s')
 
-        ax3.text(nashEqX, nashEqY, 'NE', fontsize=8, ha='center', va='center')
+        ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
 
         plt.show()
 
+
+def no_tax(action,eff,imps):
+    return 0
+
+def cutoff(action,eff,imps):
+    return -10*np.heaviside(action - 0.7,1)
+
+game1 = tp_game([1,1],[1,1],40,no_tax)
+
+game1.ShowHeatMap()
 
 
 
