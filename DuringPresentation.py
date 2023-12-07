@@ -35,5 +35,14 @@ impactList = [random.random(), random.random()]
 efficiencyList = [random.random(), random.random()]
 
 
-ShowHeatMap(cutOffImp, impactList, efficiencyList)
+# ShowHeatMap(cutOffImp, impactList, efficiencyList)
+
+def no_tax(action,eff,imps):
+    return 0
+
+def cutoff(action,eff,imps):
+    return -10*np.heaviside(action - 0.7,1)
+
+game1 = tp_game([1,1],[1,1],5,no_tax)
+game1.ShowHeatMap()
 

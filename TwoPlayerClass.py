@@ -126,16 +126,17 @@ class tp_game: #two player game
         # X, Y = np.meshgrid(x, y)
 
         # Create a figure and subplots
-        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4))#, sharey = True)
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 3.5))#, sharey = True)
 
         # Plot the first quadratic colormap
         quad1 = ax1.pcolormesh(x, y, utiMatrixOne, cmap='plasma')
         ax1.set_title('Utility Player 1')
+        ax1.set_aspect('equal', adjustable='box')
 
         # Plot the second quadratic colormap
         quad2 = ax2.pcolormesh(x, y, utiMatrixTwo, cmap='plasma')
         ax2.set_title('Utility Player 2')
-
+        ax2.set_aspect('equal', adjustable='box')
 
         vmin_common = 0 # min(quad1.get_clim()[0], quad2.get_clim()[0])
         vmax_common = 0.6 # max(quad1.get_clim()[1], quad2.get_clim()[1])
@@ -153,14 +154,20 @@ class tp_game: #two player game
         result = self.FindPareto()
         print('Pareto Optimum found!!')
 
-        ax3.pcolor(x, y, result, alpha = 1, cmap='binary')
-        ax3.set_title('Nash Equilibria')
+        ax3.pcolor(x, y, result, alpha = 1, cmap='binary', label = 'Pareto optima')
+        ax3.set_title('Pareto optima')
+        ax3.set_aspect('equal', adjustable='box')
+        
 
         # Plot Nash eq
         [nashEqX, nashEqY] = self.FindNash()
         print('Nash Equilibrium found!!')
-        ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s')
+        ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
+
+
 
         ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
+
+        # ax3.legend()
 
         plt.show()
