@@ -2,6 +2,7 @@ import numpy as np
 import nashpy as nash 
 import matplotlib.pyplot as plt
 import copy
+from matplotlib.colors import ListedColormap
 
 class tp_game: #two player game
     
@@ -65,17 +66,20 @@ class tp_game: #two player game
             # for rows, player one maximises her payoff
             maxListRows.append([np.argmax(matOne[:,j]), j])
         
+        # collect nash eq indices in list 
+        nashEqIndices = []
         for k in range(dim):
             print(maxListCols[k], maxListRows[k])
             # if maxListCols[k] == maxListRows[k]: 
             if maxListCols[k] in maxListRows:
                 
                 indexOfInterest = maxListCols[k]
-                
-                return self.action_space[indexOfInterest]
+                nashEqIndices.append(indexOfInterest)
+                # return indexOfInterest #self.action_space[indexOfInterest]
+        return nashEqIndices
 
-        print('No Nash Equilibrium found!')
-        return [0,0]
+        # print('No Nash Equilibrium found!')
+        # return [0,0]
 
 
 
@@ -169,8 +173,12 @@ class tp_game: #two player game
         result = self.FindPareto()
         print('Pareto Optimum found!!')
 
-        ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap='binary', label = 'Pareto Optima')
-        ax3.set_title('Pareto Optima')
+        # Define your custom colormap
+        custom_cmap = ListedColormap(['white', 'tab:blue'])        
+
+        ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap=custom_cmap, label = 'Pareto Optima')
+        
+        ax3.set_title('Pareto Optima for two player')
         ax3.set_aspect('equal', adjustable='box')
 
         ax3.set_xlabel('Player Two')
@@ -179,14 +187,19 @@ class tp_game: #two player game
 
 
         # Plot Nash eq
-        [nashEqY, nashEqX] = self.FindNash()
+        indicesList = self.FindNash()
+
+        for i in range(len(indicesList)): 
+            [nashEqY, nashEqX] = indicesList[i]
+            ax3.scatter(X_centers[nashEqX], Y_centers[nashEqY], s = 3*grating, color = 'darkorange', marker='D', label = 'Nash Equilibrium', alpha = 1)
         print('Nash Equilibrium found!! at ', nashEqX, nashEqY)
-        ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
+        # ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
 
 
+
+        
+        ax3.legend()
 
         # ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
-
-        # ax3.legend()
 
         plt.show()
