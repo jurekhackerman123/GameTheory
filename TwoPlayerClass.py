@@ -3,6 +3,7 @@ import nashpy as nash
 import matplotlib.pyplot as plt
 import copy
 from matplotlib.colors import ListedColormap
+import matplotlib.gridspec as gridspec
 
 class tp_game: #two player game
     
@@ -69,7 +70,7 @@ class tp_game: #two player game
         # collect nash eq indices in list 
         nashEqIndices = []
         for k in range(dim):
-            print(maxListCols[k], maxListRows[k])
+            #print(maxListCols[k], maxListRows[k])
             # if maxListCols[k] == maxListRows[k]: 
             if maxListCols[k] in maxListRows:
                 
@@ -140,6 +141,7 @@ class tp_game: #two player game
 
         # Create a figure and subplots
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4))#, sharey = True)
+        gs = gridspec.GridSpec(1, 3, width_ratios=[1, 1, 1])
 
         plt.subplots_adjust(wspace=0.5, hspace=0.1)  # Adjust the values as needed
 
@@ -148,16 +150,16 @@ class tp_game: #two player game
         ax1.set_title('Utility Player 1')
         ax1.set_aspect('equal', adjustable='box')
 
-        ax1.set_xlabel('Player Two')
-        ax1.set_ylabel('Player One')
+        ax1.set_xlabel('Player 2')
+        ax1.set_ylabel('Player 1')
 
         # Plot the second quadratic colormap
         quad2 = ax2.pcolormesh(X_centers, Y_centers, utiMatrixTwo, cmap='plasma')
         ax2.set_title('Utility Player 2')
         ax2.set_aspect('equal', adjustable='box')
 
-        ax2.set_xlabel('Player Two')
-        ax2.set_ylabel('Player One')
+        ax2.set_xlabel('Player 2')
+        ax2.set_ylabel('Player 1')
 
         vmin_common = 0 # min(quad1.get_clim()[0], quad2.get_clim()[0])
         vmax_common = 0.6 # max(quad1.get_clim()[1], quad2.get_clim()[1])
@@ -167,7 +169,7 @@ class tp_game: #two player game
         quad2.set_clim(vmin_common, vmax_common)
 
 
-        cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical')
+        #cbar = fig.colorbar(quad2, ax=[ax1, ax2], orientation='vertical', location='left')
 
         x = np.linspace(0, 1, grating)
         y = x
@@ -176,15 +178,16 @@ class tp_game: #two player game
         print('Pareto Optimum found!!')
 
         # Define your custom colormap
-        custom_cmap = ListedColormap(['white', 'tab:blue'])        
-
+        custom_cmap = ListedColormap(['white', '#0d0888'])        
+        print(result)
+        ax3.scatter
         ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap=custom_cmap, label = 'Pareto Optima')
         
-        ax3.set_title('Pareto Optima for two player')
+        #ax3.set_title('Pareto Optima for two player')
         ax3.set_aspect('equal', adjustable='box')
 
-        ax3.set_xlabel('Player Two')
-        ax3.set_ylabel('Player One')
+        ax3.set_xlabel('Player 2')
+        ax3.set_ylabel('Player 1')
         
 
 
@@ -197,12 +200,9 @@ class tp_game: #two player game
         print('Nash Equilibrium found!! at ', nashEqX, nashEqY)
         # ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
 
-
-
-
-        
         ax3.legend(loc = 'lower left')
+        cbar = fig.colorbar(quad2, ax=[ax1, ax2, ax3], orientation='vertical', location='left')
 
         # ax3.text(nashEqX, nashEqY, 'NE', fontsize=grating*0.15, ha='center', va='center')
-
+        #plt.tight_layout()
         plt.show()
