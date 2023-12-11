@@ -179,9 +179,9 @@ class tp_game: #two player game
 
         # Define your custom colormap
         custom_cmap = ListedColormap(['white', '#0d0888'])        
-        print(result)
+        # print(result)
         ax3.scatter
-        ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap=custom_cmap, label = 'Pareto Optima')
+        ax3.pcolor(X_centers, Y_centers, result, alpha = 1, cmap=custom_cmap, label = 'PO')
         
         #ax3.set_title('Pareto Optima for two player')
         ax3.set_aspect('equal', adjustable='box')
@@ -196,7 +196,7 @@ class tp_game: #two player game
 
         for i in range(len(indicesList)): 
             [nashEqY, nashEqX] = indicesList[i]
-            ax3.scatter(X_centers[nashEqX], Y_centers[nashEqY], s = 400/grating, color = 'darkorange', marker='D', label = 'Nash Equilibrium', alpha = 1)
+            ax3.scatter(X_centers[nashEqX], Y_centers[nashEqY], s = 400/grating, color = 'darkorange', marker='D', label = 'NE', alpha = 1)
         print('Nash Equilibrium found!! at ', nashEqX, nashEqY)
         # ax3.scatter(nashEqX, nashEqY, s = 3*grating, color = 'red', marker='s', label = 'Nash Equilibrium')
 
