@@ -29,11 +29,11 @@ def simple2(action, eff, imp):
     '''
     for 0.18*... we get two NE!!
     '''
-    return -0.18 * action * eff / imp
+    return -0.2 * action * eff / imp
 
 def cutOff(action, eff, imp):
 
-    return -10*np.heaviside(action - 0.5 * eff / (2*imp), 1)
+    return -10*np.heaviside(action - 0.5 * eff / (imp), 1)
 
 
 
@@ -55,8 +55,8 @@ def cutoff(action,eff,imps):
 
 
 # same eff and imp
-game1 = tp_game([1,1],[1,0.5],30,sinus)
-game1.ShowHeatMap()
+# game1 = tp_game([1,1],[1,0.7],30,cutOff)
+# game1.ShowHeatMap()
 
 # # diff efficiency
 # game2 = tp_game([1,0.5],[1,1],30,cutOff)
@@ -68,12 +68,12 @@ game1.ShowHeatMap()
 
 
 # vary functions: 
-# game = tp_game([1,1],[1,0.5],20,no_tax)
-# game.ShowHeatMap()
+game = tp_game([1,1],[1,0.5],20,simple)
+game.ShowHeatMap()
 
-# game = tp_game([1,1],[1,0.5],20,simple)
-# game.ShowHeatMap()
+game = tp_game([1,1],[1,0.5],20,simple)
+game.ShowHeatMap()
 
-# game = tp_game([1,1],[1,0.5],20,simple2)
-# game.ShowHeatMap()
+game = tp_game([1,1],[1,0.5],20,simple2)
+game.ShowHeatMap()
 
