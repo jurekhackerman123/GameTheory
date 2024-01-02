@@ -23,7 +23,7 @@ def quadratic(action, eff, imp):
 
 def simple(action, eff, imp): 
 
-    return -0.1 * action * eff / imp
+    return -0.23 * action * eff / imp
 
 def simple2(action, eff, imp): 
     '''
@@ -55,7 +55,7 @@ def cutoff(action,eff,imps):
 
 
 # same eff and imp
-game1 = tp_game([1,0.5],[1,1],30,no_tax)
+game1 = tp_game([1,1],[1,1],30,simple)
 game1.ShowHeatMap()
 
 # # diff efficiency
