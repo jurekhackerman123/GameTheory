@@ -82,12 +82,22 @@ class tp_game: #two player game
         # print('No Nash Equilibrium found!')
         # return [0,0]
 
-
+    def no_tax(self, action, eff, imps): 
+        return 0
 
 
     def FindPareto(self):
         # paretoMatrix = np.ones((len(matrix), len(matrix)))
+
+        # set tax = no tax shortly; display Pareto optima only for no tax! 
+        safeTax = self.tax
+        self.tax = self.no_tax
+
         matrix = self.uti_matrix()
+
+        # reset tax to the tax that it was before 
+        self.tax = safeTax
+
         paretoMatrix = np.ones((len(matrix), len(matrix)))
 
         for i in range(len(matrix)):
